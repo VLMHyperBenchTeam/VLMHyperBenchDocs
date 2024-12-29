@@ -1,41 +1,78 @@
-# Website
+# Сайт документации
 
-This website is built using [Docusaurus](https://docusaurus.io/), a modern static website generator.
+Сайт документации для проекта `VLMHyperBench`создан с помощью [Docusaurus](https://docusaurus.io/), современного генератора статичных сайтов.
 
-### Installation
+### Локальная разработка
 
+Выполняем команду:
 ```
-$ yarn
-```
-
-### Local Development
-
-```
-$ yarn start
+npm start
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
+Эта команда поднимет локальный сервер для разработки статичного сайта и откроет его в вашем браузере.
 
-### Build
+Большинство изменений в исходных файлах сразу же будет отображаться на вашем статичном сайте в режиме `live` без необходимои перезапускать сервер.
 
+### Сборка статичного сайта
+
+Выполняем команду:
 ```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
+npm run build
 ```
 
-Not using SSH:
+Эта команда сгенерирует статичный сайт в папке `build` репозитория.
 
+Статичный сайт расположенный в данной папке может быть размещен на любом сервисе хостинга статичных сайтов.
+
+Данный репозиторий настроен на публикацию статичного сайта документации на сервисе `GitHub Pages` по адресу:
 ```
-$ GIT_USER=<Your GitHub username> yarn deploy
+https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/
 ```
 
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+### Публикация новой версии статичного сайта
+
+Docusaurus предоставляет команду для публикации новой версии сайта `npm run deploy`.
+
+Поскольку мы разместили его на сервисе `GitHub Pages`, для публикации новой версии необходимо войти в свой аккаунт GitHub для подтверждения доступа к подобной возможности.
+
+Все участники нашей команды имеют такой доступ.
+
+Авторизоваться на GitHub можно:
+
+используя SSH-доступ:
+
+для этого выполняем команду:
+
+* На Linux / MacOs
+```
+USE_SSH=true && npm run deploy
+```
+
+* На Windows CMD
+```
+cmd /C "set "USE_SSH=true" && npm run deploy"
+```
+
+* На Windows PowerShell
+```
+cmd /C 'set "USE_SSH=true" && yarn deploy'
+```
+
+не используя SSH-доступ:
+
+* На Linux / MacOs
+```
+$ GIT_USER=<Your GitHub username> npm run deploy
+```
+
+* На Windows CMD
+```
+cmd /C "set "GIT_USER=<Your GitHub username>" && npm run deploy"
+```
+
+* На Windows PowerShell
+```
+cmd /C 'set "GIT_USER=<Your GitHub username>" && yarn deploy'
+```
+
+Эта команда автоматически опубликует версию сайта документации на `GitHub Pages` осуществив `push` собранной в папке `build` версии сайта в ветку `gh-pages`.
