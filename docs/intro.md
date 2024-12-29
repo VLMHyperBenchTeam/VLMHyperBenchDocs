@@ -11,18 +11,6 @@ import FullScreenSvg from '@site/src/components/FullScreenSvg';
 <!-- ![Описание диаграммы](img/architecture_c2_level.svg) -->
 ![Docusaurus logo](/img/architecture_c2_level.svg)
 
-<div style={{ width: '100%', height: '500px', overflow: 'auto' }}>
-  <img src="/img/architecture_c2_level.svg" alt="Описание изображения" style={{ width: '100%', height: 'auto' }} />
-</div>
-
-<iframe
-  src="/img/architecture_c2_level.svg"
-  style={{ width: '100%', height: '500px', border: 'none' }}
-  title="Описание изображения"
-></iframe>
-
-<FullScreenSvg src="/img/architecture_c2_level.svg" alt="Описание изображения" />
-
 ## Getting Started
 
 Get started by **creating a new site**.

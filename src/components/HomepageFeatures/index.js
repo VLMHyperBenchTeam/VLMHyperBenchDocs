@@ -4,32 +4,33 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
+    title: 'Легок в использовании',
     Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        VLMHyperBench был разработан так, чтобы его можно было легко 
+        установить и использовать для быстрого запуска бенчмарка
+        нужных вам VLM-моделей.
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
+    title: 'Сфокусируйтесь на том, что важно',
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Сфокусируйтесь на тестирования VLM-моделей и подборе промптов.
+        VLMHyperBench организует бенчмарк и предоставит результаты.
       </>
     ),
   },
   {
-    title: 'Powered by React',
+    title: 'Powered by Docker',
     Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Каждая VLM-модель живет в своем Docker-контейнере. 
+        Благодаря этому можно сравнивать модели из разного окружения.
       </>
     ),
   },
