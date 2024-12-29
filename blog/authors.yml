@@ -1,0 +1,55 @@
+yangshun:
+  name: Yangshun Tay
+  title: Front End Engineer @ Facebook
+  url: https://github.com/yangshun
+  image_url: https://github.com/yangshun.png
+  page: true
+  socials:
+    x: yangshunz
+    github: yangshun
+
+slorber:
+  name: Sébastien Lorber
+  title: Docusaurus maintainer
+  url: https://sebastienlorber.com
+  image_url: https://github.com/slorber.png
+  page:
+    # customize the url of the author page at /blog/authors/<permalink>
+    permalink: '/all-sebastien-lorber-articles'
+  socials:
+    x: sebastienlorber
+    linkedin: sebastienlorber
+    github: slorber
+    newsletter: https://thisweekinreact.com
+
+shiryaev:
+  name: Антон Ширяев
+  title: VLMHyperBench Dev
+  url: https://github.com/medphisiker
+  image_url: https://avatars.githubusercontent.com/medphisiker
+  socials:
+    github: medphisiker
+
+lukin:
+  name: Семен Лукин
+  title: VLMHyperBench Dev
+  url: https://github.com/ctpemho7
+  image_url: https://avatars.githubusercontent.com/ctpemho7
+  socials:
+    github: ctpemho7
+
+kapustin:
+  name: Капустин Евгений
+  title: VLMHyperBench Dev
+  url: https://github.com/EugenePWN
+  image_url: https://avatars.githubusercontent.com/EugenePWN
+  socials:
+    github: EugenePWN
+
+ovchinnikova:
+  name: Юлия Овчинникова
+  title: VLMHyperBench Dev
+  url: https://github.com/YuliaOv22
+  image_url: https://avatars.githubusercontent.com/YuliaOv22
+  socials:
+    github: YuliaOv22
