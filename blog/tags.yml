@@ -1,9 +1,0 @@
-hello:
-  label: Hello
-  permalink: /hello
-  description: Greetings
-
-VLMHyperBench:
-  label: VLMHyperBench
-  permalink: /vlmhyperbench
-  description: Post related VLMHyperBench

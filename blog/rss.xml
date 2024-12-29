@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="rss.xsl"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>VLMHyperBench Blog</title>
+        <link>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog</link>
+        <description>VLMHyperBench Blog</description>
+        <lastBuildDate>Sat, 28 Dec 2024 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>ru</language>
+        <item>
+            <title><![CDATA[Приветствуем,]]></title>
+            <link>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/greetings</link>
+            <guid>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/greetings</guid>
+            <pubDate>Sat, 28 Dec 2024 00:00:00 GMT</pubDate>
+            <description><![CDATA[Мы команда VLMHyperBenchTeam разрабатываем VLMHyperBench, ПО для тестирования VLM-моделей.]]></description>
+            <content:encoded><![CDATA[<p>Мы команда <code>VLMHyperBenchTeam</code> разрабатываем <code>VLMHyperBench</code>, ПО для тестирования VLM-моделей.</p>]]></content:encoded>
+            <category>Hello</category>
+            <category>VLMHyperBench</category>
+        </item>
+    </channel>
+</rss>

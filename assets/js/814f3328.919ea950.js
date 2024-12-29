@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkvlmhyperbench=self.webpackChunkvlmhyperbench||[]).push([[472],{5513:e=>{e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"\u041f\u0440\u0438\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u0435\u043c,","permalink":"/VLMHyperBenchDocs/blog/greetings","unlisted":false,"date":"2024-12-28T00:00:00.000Z"}]}')}}]);

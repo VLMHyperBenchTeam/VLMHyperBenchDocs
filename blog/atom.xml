@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?><?xml-stylesheet type="text/xsl" href="atom.xsl"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+    <id>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog</id>
+    <title>VLMHyperBench Blog</title>
+    <updated>2024-12-28T00:00:00.000Z</updated>
+    <generator>https://github.com/jpmonette/feed</generator>
+    <link rel="alternate" href="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog"/>
+    <subtitle>VLMHyperBench Blog</subtitle>
+    <icon>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Приветствуем,]]></title>
+        <id>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/greetings</id>
+        <link href="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/greetings"/>
+        <updated>2024-12-28T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[Мы команда VLMHyperBenchTeam разрабатываем VLMHyperBench, ПО для тестирования VLM-моделей.]]></summary>
+        <content type="html"><![CDATA[<p>Мы команда <code>VLMHyperBenchTeam</code> разрабатываем <code>VLMHyperBench</code>, ПО для тестирования VLM-моделей.</p>]]></content>
+        <author>
+            <name>Антон Ширяев</name>
+            <uri>https://github.com/medphisiker</uri>
+        </author>
+        <author>
+            <name>Семен Лукин</name>
+            <uri>https://github.com/ctpemho7</uri>
+        </author>
+        <author>
+            <name>Капустин Евгений</name>
+            <uri>https://github.com/EugenePWN</uri>
+        </author>
+        <author>
+            <name>Юлия Овчинникова</name>
+            <uri>https://github.com/YuliaOv22</uri>
+        </author>
+        <category label="Hello" term="Hello"/>
+        <category label="VLMHyperBench" term="VLMHyperBench"/>
+    </entry>
+</feed>
