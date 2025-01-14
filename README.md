@@ -1,6 +1,6 @@
 # Сайт документации
 
-Сайт документации для проекта `VLMHyperBench`создан с помощью [Docusaurus](https://docusaurus.io/), современного генератора статичных сайтов.
+Сайт документации ([ссылка](https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/)) для проекта `VLMHyperBench`создан с помощью [Docusaurus](https://docusaurus.io/), современного генератора статичных сайтов.
 
 ### Локальная разработка
 
