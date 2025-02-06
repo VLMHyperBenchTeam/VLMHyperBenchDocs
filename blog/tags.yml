@@ -3,6 +3,16 @@ hello:
   permalink: /hello
   description: Greetings
 
+design:
+  label: design
+  permalink: /design
+  description: Design
+
+docs_site:
+  label: docs site
+  permalink: /docs_site
+  description: Documentation site
+
 VLMHyperBench:
   label: VLMHyperBench
   permalink: /vlmhyperbench
