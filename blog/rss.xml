@@ -4,10 +4,23 @@
         <title>VLMHyperBench Blog</title>
         <link>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog</link>
         <description>VLMHyperBench Blog</description>
-        <lastBuildDate>Sat, 28 Dec 2024 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 03 Mar 2025 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>ru</language>
+        <item>
+            <title><![CDATA[Обновленный дизайн]]></title>
+            <link>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/design</link>
+            <guid>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/design</guid>
+            <pubDate>Mon, 03 Mar 2025 00:00:00 GMT</pubDate>
+            <description><![CDATA[У нас отличные новости!]]></description>
+            <content:encoded><![CDATA[<p>У нас отличные новости!</p>
+<p>Дизайнер Вадим Паненко создал для нашего сайта с документацией просто огненные иконки! 🔥
+Теперь у нас есть фирменный стиль)</p>
+<p><img decoding="async" loading="lazy" alt="Компьютер" src="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/assets/images/VLMHyperBench_icons-01e232287025b2504119a7f258481854.jpg" width="1154" height="788" class="img_ev3q"></p>]]></content:encoded>
+            <category>design</category>
+            <category>docs site</category>
+        </item>
         <item>
             <title><![CDATA[Приветствуем,]]></title>
             <link>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/greetings</link>

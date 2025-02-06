@@ -2,11 +2,28 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
     <id>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog</id>
     <title>VLMHyperBench Blog</title>
-    <updated>2024-12-28T00:00:00.000Z</updated>
+    <updated>2025-03-03T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
     <link rel="alternate" href="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog"/>
     <subtitle>VLMHyperBench Blog</subtitle>
     <icon>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/img/favicon.ico</icon>
+    <entry>
+        <title type="html"><![CDATA[Обновленный дизайн]]></title>
+        <id>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/design</id>
+        <link href="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/design"/>
+        <updated>2025-03-03T00:00:00.000Z</updated>
+        <summary type="html"><![CDATA[У нас отличные новости!]]></summary>
+        <content type="html"><![CDATA[<p>У нас отличные новости!</p>
+<p>Дизайнер Вадим Паненко создал для нашего сайта с документацией просто огненные иконки! 🔥
+Теперь у нас есть фирменный стиль)</p>
+<p><img decoding="async" loading="lazy" alt="Компьютер" src="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/assets/images/VLMHyperBench_icons-01e232287025b2504119a7f258481854.jpg" width="1154" height="788" class="img_ev3q"></p>]]></content>
+        <author>
+            <name>Вадим Паненко</name>
+            <uri>https://github.com/VadimPanenko</uri>
+        </author>
+        <category label="design" term="design"/>
+        <category label="docs site" term="docs site"/>
+    </entry>
     <entry>
         <title type="html"><![CDATA[Приветствуем,]]></title>
         <id>https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/blog/greetings</id>
