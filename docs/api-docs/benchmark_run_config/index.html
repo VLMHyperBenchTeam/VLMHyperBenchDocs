@@ -5,7 +5,7 @@
 <meta name="generator" content="Docusaurus v3.6.3">
 <title data-rh="true">benchmark_run_config | VLMHyperBench</title><meta data-rh="true" name="viewport" content="width=device-width,initial-scale=1"><meta data-rh="true" name="twitter:card" content="summary_large_image"><meta data-rh="true" property="og:image" content="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/img/docusaurus-social-card.jpg"><meta data-rh="true" name="twitter:image" content="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/img/docusaurus-social-card.jpg"><meta data-rh="true" property="og:url" content="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/docs/api-docs/benchmark_run_config"><meta data-rh="true" property="og:locale" content="ru"><meta data-rh="true" name="docusaurus_locale" content="ru"><meta data-rh="true" name="docsearch:language" content="ru"><meta data-rh="true" name="docusaurus_version" content="current"><meta data-rh="true" name="docusaurus_tag" content="docs-default-current"><meta data-rh="true" name="docsearch:version" content="current"><meta data-rh="true" name="docsearch:docusaurus_tag" content="docs-default-current"><meta data-rh="true" property="og:title" content="benchmark_run_config | VLMHyperBench"><meta data-rh="true" name="description" content="BenchmarkRunConfig Objects"><meta data-rh="true" property="og:description" content="BenchmarkRunConfig Objects"><link data-rh="true" rel="icon" href="/VLMHyperBenchDocs/img/favicon.ico"><link data-rh="true" rel="canonical" href="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/docs/api-docs/benchmark_run_config"><link data-rh="true" rel="alternate" href="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/docs/api-docs/benchmark_run_config" hreflang="ru"><link data-rh="true" rel="alternate" href="https://vlmhyperbenchteam.github.io/VLMHyperBenchDocs/docs/api-docs/benchmark_run_config" hreflang="x-default"><link rel="alternate" type="application/rss+xml" href="/VLMHyperBenchDocs/blog/rss.xml" title="VLMHyperBench RSS Feed">
 <link rel="alternate" type="application/atom+xml" href="/VLMHyperBenchDocs/blog/atom.xml" title="VLMHyperBench Atom Feed"><link rel="stylesheet" href="/VLMHyperBenchDocs/assets/css/styles.88d62740.css">
-<script src="/VLMHyperBenchDocs/assets/js/runtime~main.524d2757.js" defer="defer"></script>
+<script src="/VLMHyperBenchDocs/assets/js/runtime~main.a7bcd773.js" defer="defer"></script>
 <script src="/VLMHyperBenchDocs/assets/js/main.c657c2ed.js" defer="defer"></script>
 </head>
 <body class="navigation-with-keyboard">
@@ -20,7 +20,7 @@
 <li><code>model_family</code> <em>str</em> - Название семейства VLM-модели, которую будем оценивать на бенчмарке
 (например, &quot;Qwen2-VL&quot;).</li>
 <li><code>task_name</code> <em>str</em> - Название типа задачи, на которой оцениваем VLM-модель (например, &quot;VQA&quot;, &quot;RPO&quot;).</li>
-<li><code>prompt_collection</code> <em>str</em> - Название csv-файла, содержащего коллекцию промптов для модели,
+<li><code>prompt_collection</code> <em>str</em> - Название csv-файла, содерж ащего коллекцию промптов для модели,
 которые и будут использованы при бенчмарке модели.</li>
 <li><code>docker_image</code> <em>str</em> - Название Docker image, в котором будем проводить бенчмарк модели.
 Если None, то будет использован Docker image из <code>vlmhyperbench/vlm_base.csv</code>,
@@ -37,7 +37,7 @@ Defaults to None.</li>
 <li><code>only_evaluate_metrics</code> <em>bool</em> - Если True, то пропускаем этап 1 оценки VLM-модели на датасете
 и сразу переходим к этапу оценки метрик. Optional.
 Defaults to False.</li>
-<li><code>metrics_aggregators</code> <em>list[str] | None</em> - Список типов агрегаторов, используя ко торые рассчитываем метрики
+<li><code>metrics_aggregators</code> <em>list[str] | None</em> - Список типов агрегаторов, исполь зуя которые рассчитываем метрики
 (например, [&quot;by_id&quot;, &quot;by_doc_type&quot;, &quot;overall&quot;]). Optional. Defaults to None.
 Если None, то метрики оцениваться не будут и этап 2 будет пропущен.</li>
 <li><code>filter_doc_class</code> <em>str | None</em> - Разметка датасета annotation.csv, будет отфильтрована, так чтобы
