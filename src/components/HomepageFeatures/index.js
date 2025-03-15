@@ -19,7 +19,7 @@ const FeatureList = [
     Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
     description: (
       <>
-        Сфокусируйтесь на тестирования VLM-моделей и подборе промптов.
+        Сфокусируйтесь на тестировании VLM-моделей и подборе промптов.
         VLMHyperBench организует бенчмарк и предоставит результаты.
       </>
     ),
