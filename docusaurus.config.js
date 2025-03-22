@@ -47,6 +47,7 @@ const config = {
           // Remove this to remove the "edit this page" links.
           editUrl:
             'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+          includeCurrentVersion: false,    
         },
         blog: {
           showReadingTime: true,
@@ -88,12 +89,17 @@ const config = {
             position: 'left',
             label: 'Docs',
           },
+          {
+            type: 'docsVersionDropdown',
+            position: 'left',
+          },
           {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/orgs/VLMHyperBenchTeam/repositories',
             label: 'GitHub',
             position: 'right',
           },
+          
         ],
       },
       footer: {
