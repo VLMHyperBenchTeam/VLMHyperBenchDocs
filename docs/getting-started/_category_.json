@@ -1,0 +1,8 @@
+{
+  "label": "🚀 Getting Started",
+  "position": 1,
+  "link": {
+    "type": "generated-index",
+    "description": "Быстрый старт и установка VLMHyperBench"
+  }
+}

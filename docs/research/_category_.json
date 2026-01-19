@@ -1,0 +1,8 @@
+{
+  "label": "🔬 Research",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Исследования и лучшие практики оценки VLM"
+  }
+}
