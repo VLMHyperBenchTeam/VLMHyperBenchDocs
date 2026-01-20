@@ -1,1 +1,0 @@
-"use strict";(self.webpackChunkvlmhyperbench=self.webpackChunkvlmhyperbench||[]).push([[1903],{1912:e=>{e.exports=JSON.parse('{"blogBasePath":"/VLMHyperBenchDocs/blog","blogTitle":"Blog","authorsListPath":"/VLMHyperBenchDocs/blog/authors"}')}}]);
