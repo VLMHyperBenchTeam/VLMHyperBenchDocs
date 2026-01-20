@@ -1,21 +1,7 @@
 // @ts-check
 
-// This runs in Node.js - Don't use client-side code here (browser APIs, JSX...)
-
-/**
- * Creating a sidebar enables you to:
- - create an ordered group of docs
- - render a sidebar for each doc of that group
- - provide next/previous navigation
-
- The sidebars can be generated from the filesystem, or explicitly defined here.
-
- Create as many sidebars as you want.
-
- @type {import('@docusaurus/plugin-content-docs').SidebarsConfig}
- */
+/** @type {import('@docusaurus/plugin-content-docs').SidebarsConfig} */
 const sidebars = {
-  // By default, Docusaurus generates a sidebar from the docs folder structure
   tutorialSidebar: [
     'intro',
     {
@@ -32,7 +18,14 @@ const sidebars = {
         {
           type: 'category',
           label: 'ADR',
-          items: ['architecture/adr/index', 'architecture/adr/isolation'],
+          items: [
+            'architecture/adr/index',
+            'architecture/adr/001-isolation',
+            'architecture/adr/002-dynamic-dependencies',
+            'architecture/adr/003-api-wrapper',
+            'architecture/adr/004-smart-sync',
+            'architecture/adr/005-registries',
+          ],
         },
       ],
     },
@@ -44,7 +37,11 @@ const sidebars = {
     {
       type: 'category',
       label: '🛠️ Contributor Guide',
-      items: ['contributor-guide/development-workflow', 'contributor-guide/project-structure'],
+      items: [
+        'contributor-guide/development-workflow',
+        'contributor-guide/dependency-management',
+        'contributor-guide/project-structure',
+      ],
     },
     {
       type: 'category',
@@ -79,19 +76,6 @@ const sidebars = {
       ],
     },
   ],
-
-  // But you can create a sidebar manually
-  /*
-  tutorialSidebar: [
-    'intro',
-    'hello',
-    {
-      type: 'category',
-      label: 'Tutorial',
-      items: ['tutorial-basics/create-a-document'],
-    },
-  ],
-   */
 };
 
 export default sidebars;
