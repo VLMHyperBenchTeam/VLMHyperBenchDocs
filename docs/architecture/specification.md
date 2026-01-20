@@ -9,13 +9,13 @@
 ```mermaid
 graph LR
     subgraph "Management Plane (Host)"
-        UI[Web UI - React] <--> API[API Server - FastAPI]
-        API <--> DB[(SQLite/Postgres)]
-        API <--> FS[(Shared FS / S3)]
+        UI[Web UI - React] <--> BE[Backend - FastAPI]
+        BE <--> DB[(SQLite/Postgres)]
+        BE <--> FS[(Shared FS / S3)]
     end
 
     subgraph "Execution Plane (Docker Engine)"
-        API <--> Orch[Orchestrator]
+        BE <--> Orch[Orchestrator]
         Orch --> Stage1[Inference Stage]
         Orch --> Stage2[Evaluation Stage]
     end
@@ -28,7 +28,7 @@ graph LR
 
 ## 2. Подсистема управления (Management Plane)
 
-### 2.1. API Server (FastAPI)
+### 2.1. Backend (FastAPI)
 *   **Role**: Центральный узел управления состоянием и данными.
 *   **Key Methods**:
     *   `POST /experiments`: Создание нового бенчмарка.
@@ -44,7 +44,7 @@ graph LR
 ### 3.1. Orchestrator (State Driven)
 *   **BenchmarkPlanner**: Строит граф задач на основе конфига.
 *   **TaskTracker**: Мониторит статусы (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`) каждого этапа.
-*   **EventBus**: Транслирует события выполнения в API Server.
+*   **EventBus**: Транслирует события выполнения в Backend.
 
 ### 3.2. Inference Stage (run_vlm.py)
 *   **AsyncDatasetRunner**: Асинхронно обрабатывает датасет, вызывая API Wrapper.

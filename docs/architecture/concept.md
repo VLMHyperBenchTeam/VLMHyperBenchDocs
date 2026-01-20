@@ -7,7 +7,7 @@ VLMHyperBench — это модульный, расширяемый фреймв
 1.  **Изоляция превыше всего**: Мы не пытаемся установить все библиотеки в один Python environment. Каждая модель и каждый этап оценки запускаются в собственном изолированном контейнере.
 2.  **Everything is a Registry**: Модели, Задачи, Метрики — это подключаемые модули (плагины), регистрируемые в системе. Ядро фреймворка агностично к конкретным реализациям.
 3.  **Configuration as Code**: Весь эксперимент описывается декларативными конфигурационными файлами (CSV/JSON).
-4.  **Environment Agnostic**: Код этапа не знает, где он выполняется (локальный Docker, Kubernetes Pod или HPC Singularity).
+4.  **Environment Agnostic**: Код этапа не знает, где он выполняется (локальный Docker, Run Pod или HPC Singularity).
 
 ## 2. Компонентная модель (v0.2.0)
 
@@ -20,14 +20,14 @@ VLMHyperBench — это модульный, расширяемый фреймв
 ```mermaid
 graph TD
     User["Пользователь"] --> WebUI["Web UI (React)"]
-    WebUI --> APIServer["API Server (FastAPI)"]
+    WebUI --> Backend["Backend (FastAPI)"]
     
     subgraph "Management Plane"
-        APIServer --> DB[(Database)]
-        APIServer --> Analytics["Analytics Engine"]
+        Backend --> DB[(Database)]
+        Backend --> Analytics["Analytics Engine"]
     end
     
-    APIServer -->|"Команды запуска"| Orchestrator["Orchestrator"]
+    Backend -->|"Команды запуска"| Orchestrator["Orchestrator"]
 ```
 
 #### 2.1.1. Оркестратор
