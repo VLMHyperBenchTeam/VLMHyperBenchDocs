@@ -1,149 +1,80 @@
-# Детальная спецификация архитектуры
+# Детальная спецификация архитектуры VLMHyperBench v0.2.0
 
-Этот документ содержит детальное описание архитектуры VLMHyperBench, включая описание модулей, классов, методов и схему их взаимодействия.
+Этот документ содержит детальное описание архитектуры платформы VLMHyperBench версии 0.2.0, включая описание модулей, классов, методов и схему их взаимодействия.
 
-## 1. Общая схема взаимодействия (Component Diagram)
+## 1. Общая схема платформы
 
-Система разделена на **Control Plane** (управление) и **Execution Plane** (исполнение). Инференс абстрагирован через **API Wrapper** (FastAPI Proxy), унифицирующий взаимодействие с различными бэкендами (vLLM, HuggingFace, SGLang).
+Платформа разделена на три функциональные плоскости: **Management**, **Execution** и **Inference**.
 
 ```mermaid
-graph TD
-    User["Пользователь"] -->|"user_config.csv"| Orchestrator["BenchmarkOrchestrator"]
-    Registry["VLM Base (vlm_base.csv)"] --> Orchestrator
-    
-    subgraph "Control Plane (Host)"
-        Orchestrator -->|"Parses & Plans"| ConfigMgr["ConfigManager & UserConfigReader"]
-        ConfigMgr -->|"Creates"| RunConfig["BenchmarkRunConfig (List)"]
-        Orchestrator -->|"Manages"| DockerClient["Docker SDK"]
-        Orchestrator -->|"Uses"| EnvMgr["Environment Manager"]
+graph LR
+    subgraph "Management Plane (Host)"
+        UI[Web UI - React] <--> API[API Server - FastAPI]
+        API <--> DB[(SQLite/Postgres)]
+        API <--> FS[(Shared FS / S3)]
     end
 
-    subgraph "Execution Plane (Docker Containers)"
-        direction TB
-        
-        subgraph "Stage 1: Inference (GPU Container)"
-            RunVLM["run_vlm.py (Client)"]
-            
-            subgraph "API Wrapper (FastAPI)"
-                Proxy["Proxy Layer"]
-                MetricsCol["Metrics Collector"]
-                Adapter["Backend Adapter (HF/vLLM/SGLang)"]
-            end
-            
-            ModelBackend["Model Engine"]
-            
-            RunVLM -->|"HTTP /v1/chat/completions"| Proxy
-            Proxy --> MetricsCol
-            Proxy --> Adapter
-            Adapter --> ModelBackend
-            
-            IteratorFabric["IteratorFabric"]
-            Runner["DatasetRunner"]
-            
-            RunVLM --> IteratorFabric
-            IteratorFabric -->|"Creates"| Iterator["DatasetIterator"]
-            IteratorFabric -->|"Creates"| Runner
-            Runner -->|"Uses"| Iterator
-            Runner -->|"Calls"| RunVLM
-        end
-        
-        subgraph "Stage 2: Evaluation (CPU Container)"
-            RunEval["run_eval.py"]
-            MetricEval["MetricEvaluator"]
-            
-            RunEval --> MetricEval
-        end
+    subgraph "Execution Plane (Docker Engine)"
+        API <--> Orch[Orchestrator]
+        Orch --> Stage1[Inference Stage]
+        Orch --> Stage2[Evaluation Stage]
     end
 
-    subgraph "Data Layer (Mounted Volumes)"
-        Dataset["Datasets"]
-        Prompts["Prompt Collections"]
-        Answers["Model Answers (CSV)"]
-        Metrics["Metrics (CSV)"]
-        GT["Ground Truth (Annotation)"]
+    subgraph "Inference Layer (Container)"
+        Stage1 <--> Wrap[API Wrapper]
+        Wrap <--> Back[vLLM / SGLang / HF]
     end
-
-    DockerClient -->|"Runs"| RunVLM
-    DockerClient -->|"Runs"| RunEval
-
-    Iterator -->|"Reads"| Dataset
-    Iterator -->|"Reads"| Prompts
-    Runner -->|"Writes"| Answers
-    
-    MetricEval -->|"Reads"| Answers
-    MetricEval -->|"Reads"| GT
-    MetricEval -->|"Writes"| Metrics
 ```
 
-## 2. Подсистема управления окружением и воркерами
+## 2. Подсистема управления (Management Plane)
 
-### 2.1. Worker Manager
-Отвечает за распределение задач по доступным ресурсам.
-*   **Функции**:
-    *   Обнаружение доступных GPU (локально или в кластере).
-    *   Создание пула воркеров (Worker Pool).
-    *   Назначение задач (Evaluation Runs) свободным воркерам.
-    *   Мониторинг состояния воркеров.
+### 2.1. API Server (FastAPI)
+*   **Role**: Центральный узел управления состоянием и данными.
+*   **Key Methods**:
+    *   `POST /experiments`: Создание нового бенчмарка.
+    *   `GET /experiments/{id}/status`: Получение текущего состояния через WebSockets.
+    *   `GET /analytics/{id}`: Подготовка данных для Plotly графиков.
 
-### 2.2. EnvManager
-Абстрагирует жизненный цикл изолированной среды.
+### 2.2. Web UI (React)
+*   **Role**: Визуализация и мониторинг.
+*   **Features**: Real-time логи, интерактивные графики метрик, сравнение моделей.
 
-**Интерфейс `EnvManager`**:
-*   `setup(requirements: List[str])`: Подготовка окружения (установка пакетов).
-*   `run(command: str, volumes: Dict)`: Запуск команды с монтированием данных.
-*   `cleanup()`: Освобождение ресурсов.
-*   `mount_data(data_paths: Dict)`: Монтирование общих данных (Shared Storage).
+## 3. Подсистема исполнения (Execution Plane)
 
-**Реализации**:
-*   `DockerEnvManager`: Использует Docker API. Для доступа к данным использует `volumes` (bind mounts).
-*   `SingularityEnvManager`: Конвертирует Docker image в SIF и запускает.
-*   `RunPodEnvManager`: Арендует Pod, синхронизирует данные (rsync/S3), запускает задачу.
-*   `LocalVenvManager`: Создает временный venv (для отладки).
+### 3.1. Orchestrator (State Driven)
+*   **BenchmarkPlanner**: Строит граф задач на основе конфига.
+*   **TaskTracker**: Мониторит статусы (`PENDING`, `RUNNING`, `COMPLETED`, `FAILED`) каждого этапа.
+*   **EventBus**: Транслирует события выполнения в API Server.
 
-## 3. Подсистема Инференса (Model Interface)
+### 3.2. Inference Stage (run_vlm.py)
+*   **AsyncDatasetRunner**: Асинхронно обрабатывает датасет, вызывая API Wrapper.
+*   **PromptManager**: Динамически выбирает системные и пользовательские промпты на основе типа документа (`item.metadata.doc_type`).
 
-Унифицирует работу с разными бэкендами (vLLM, SGLang, HF) через унифицированный **FastAPI Proxy**.
+## 4. Слой инференса (Inference Layer)
 
-### 3.1. API Wrapper (FastAPI)
-*   **Роль**: Унификация интерфейсов разных движков (HF, vLLM) к единому стандарту OpenAI API (`/v1/chat/completions`) и автоматический сбор метрик производительности.
-*   **Компоненты**:
-    *   **Proxy Layer**: Принимает HTTP запросы.
-    *   **Backend Adapter**: Адаптирует запрос под конкретный движок (HuggingFace Adapter, vLLM Adapter).
-    *   **Metrics Collector**: Замеряет TTFT, TPOT, Latency, Peak Memory.
+### 4.1. API Wrapper (FastAPI Proxy)
+*   Унифицирует доступ к моделям через OpenAI-совместимый протокол.
+*   Поддерживает `model_params` для передачи специфичных настроек (например, `ngram_size` для DeepSeek-OCR).
+*   Реализует `constrained decoding` через параметры `response_format`.
 
-### 3.2. Интерфейс `VLMInterface`
-*   `load_model(config)`: Загрузка весов.
-*   `generate(prompts, images, generation_config)`: Генерация ответов.
+### 4.2. Backend Adapters
+*   `vLLMAdapter`: Интеграция с `guided_decoding`.
+*   `SGLangAdapter`: Использование FSM для структурированного вывода.
+*   `HuggingFaceAdapter`: Использование библиотеки **Outlines** для наложения масок на логиты.
 
-### 3.3. Адаптеры
-*   `HuggingFaceAdapter`: `AutoModelForVision2Seq`.
-*   `vLLMAdapter`: `vllm.LLM` с поддержкой batching.
-*   `SGLangAdapter`: Клиент к SGLang server.
+## 5. Слой оценки (Evaluation Layer)
 
-## 4. Подсистема Задач и Метрик
+### 5.1. DataParser & Validation
+*   Извлекает структурированные данные из ответов.
+*   **Pydantic Validation**: Проверяет соответствие JSON заданной схеме.
+*   **Metric: Structural Fidelity**: Фиксирует валидность формата.
 
-### 4.1. Task Registry
-*   Определяет формат `DatasetIterator` (как читать данные).
-*   Определяет `PromptStrategy` (как формировать промпт).
-
-### 4.2. Metric Registry
-*   Содержит реализацию метрик (ANLS, Accuracy, BLEU).
-*   Позволяет динамически подгружать код метрик (например, из git-repo).
-
-## 5. Подсистема Агрегации и Отчетов
-
-### 5.1. MetricAggregator
-*   **Вход**: `metrics.csv` (по каждому примеру).
-*   **Конфиг**: Группировка по колонкам (например, `doc_type`, `field_name`).
-*   **Выход**: Сводные таблицы.
-
-### 5.2. ReportGenerator
-*   Рендеринг Markdown/HTML отчетов с графиками (matplotlib/seaborn).
+### 5.2. Metric Registry & Aggregator
+*   **Hierarchy**: `TextMetric` (CER/ANLS), `FieldMetric` (JSON match), `ClassificationMetric`.
+*   **Aggregation Strategies**: `by_id` (детально), `by_category` (группировка), `general` (общий итог).
 
 ## 6. Технологический стек
-*   **Core**: Python 3.10+, Pydantic (валидация конфигов).
-*   **Containerization**: Docker SDK, Singularity (via subprocess).
-*   **Cloud**: RunPod API / SkyPilot (опционально).
-*   **Data**: Pandas, Polars (для быстрой обработки CSV).
-*   **Tracking**: Arize Phoenix (промпты), MLflow/WandB (метрики - опционально).
-*   **Inference**: vLLM, Transformers, SGLang.
+*   **Frontend**: React, Tailwind CSS, Plotly.js.
+*   **Backend**: FastAPI, Pydantic, SQLAlchemy.
+*   **Execution**: Docker SDK, vLLM, SGLang, Outlines.
+*   **Data**: Pandas, Polars.
