@@ -6,11 +6,11 @@ VLMHyperBench организован как монорепозиторий с и
 
 ```
 vlmhyperbench/
-├── packages/                   # Python-пакеты (git submodules)
-│   ├── bench-utils/           # Общие утилиты и базовые метрики
-│   ├── model-interface/       # Абстрактные классы для моделей
-│   ├── prompt-handler/        # Логика формирования промптов
-│   └── model-qwen2-5-vl/     # Пример реализации конкретной модели
+├── packages/                   # Актуальные пакеты v0.2.0
+│   ├── api-wrapper/           # Асинхронный прокси-слой инференса (vLLM/SGLang/HF)
+│   ├── prompt-manager/        # Динамическое управление промптами и системными инструкциями
+│   ├── metric-evaluator/      # Слой оценки, парсинга JSON и валидации структур
+│   └── bench-utils/           # Базовые реализации метрик (CER, ANLS) и утилиты
 ├── docs/                       # Техническая документация (ADR, черновики)
 ├── docs_site/                  # Сайт на Docusaurus
 ├── docker/                     # Dockerfiles для различных сред

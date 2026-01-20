@@ -61,37 +61,26 @@ def validate_data() -> None
 
 <a id="metric_evaluator.metric_evaluator.metric_evaluator.MetricEvaluator.calculate_metrics_by_id"></a>
 
-#### calculate\_metrics\_by\_id
+#### evaluate\_item
 
 ```python
-def calculate_metrics_by_id() -> pd.DataFrame
+def evaluate_item(pred_raw: str, gt_raw: str) -> Dict[str, float]
 ```
 
-Вычисляет метрики для каждого ID.
-
-Возвращает:
-    pd.DataFrame: DataFrame с метриками для каждого ID.
-
-Метрики:
-    - WER (Word Error Rate)
-    - CER (Character Error Rate)
-    - BLEU (Bilingual Evaluation Understudy)
-
-<a id="metric_evaluator.metric_evaluator.metric_evaluator.MetricEvaluator.calculate_metrics_by_doc_type"></a>
-
-#### calculate\_metrics\_by\_doc\_type
-
-```python
-def calculate_metrics_by_doc_type(df: pd.DataFrame) -> pd.DataFrame
-```
-
-Вычисляет метрики для каждого типа документа.
+Выполняет полный цикл оценки одного объекта: парсинг, выравнивание полей и расчет метрик.
 
 Аргументы:
-    df (pd.DataFrame): DataFrame из метода calculate_metrics_by_id.
+    pred_raw (str): Сырой ответ модели.
+    gt_raw (str): Эталонный ответ.
 
 Возвращает:
-    pd.DataFrame: DataFrame с метриками для каждого типа документа.
+    Dict[str, float]: Словарь со значениями всех метрик (включая StructuralFidelity).
+
+Метрики:
+    - StructuralFidelity (валидность формата)
+    - CER (Character Error Rate)
+    - ANLS (Average Normalized Levenshtein Similarity)
+    - Field-level F1 (для JSON)
 
 <a id="metric_evaluator.metric_evaluator.metric_evaluator.MetricEvaluator.group_by_doc_question"></a>
 

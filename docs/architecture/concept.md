@@ -9,28 +9,25 @@ VLMHyperBench — это модульный, расширяемый фреймв
 3.  **Configuration as Code**: Весь эксперимент описывается декларативными конфигурационными файлами (CSV/JSON).
 4.  **Environment Agnostic**: Код этапа не знает, где он выполняется (локальный Docker, Kubernetes Pod или HPC Singularity).
 
-## 2. Компонентная модель
+## 2. Компонентная модель (v0.2.0)
 
-Система разделена на две основные плоскости: **Control Plane** (управление) и **Execution Plane** (исполнение).
+Система разделена на три основные плоскости: **Management Plane**, **Execution Plane** и **Inference Layer**.
 
-### 2.1. Управляющий слой (Control Plane)
+### 2.1. Слой управления (Management Plane)
 
-Отвечает за логику планирования, управление ресурсами и реестры компонентов.
+Обеспечивает интерфейс взаимодействия с пользователем и хранение истории экспериментов.
 
 ```mermaid
 graph TD
-    User["Пользователь"] -->|"Config (CSV)"| Orchestrator[Benchmark Orchestrator]
+    User["Пользователь"] --> WebUI["Web UI (React)"]
+    WebUI --> APIServer["API Server (FastAPI)"]
     
-    subgraph "Control Plane (Host)"
-        Orchestrator --> ModelReg[Model Registry]
-        Orchestrator --> TaskReg[Task Registry]
-        Orchestrator --> MetricReg[Metric Registry]
-        
-        Orchestrator --> WorkerMgr[Worker Manager]
-        WorkerMgr --> EnvMgr[Environment Manager]
+    subgraph "Management Plane"
+        APIServer --> DB[(Database)]
+        APIServer --> Analytics["Analytics Engine"]
     end
     
-    EnvMgr -->|"Управление контейнерами"| ExecutionPlane["Execution Plane"]
+    APIServer -->|"Команды запуска"| Orchestrator["Orchestrator"]
 ```
 
 #### 2.1.1. Оркестратор
