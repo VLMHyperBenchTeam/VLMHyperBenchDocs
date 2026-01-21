@@ -13,7 +13,6 @@ vlmhyperbench/
 │   └── bench-utils/           # Базовые реализации метрик (CER, ANLS) и утилиты
 ├── docs/                       # Техническая документация (ADR, черновики)
 ├── docs_site/                  # Сайт на Docusaurus
-├── docker/                     # Dockerfiles для различных сред
 ├── staging/                    # Конфигурация для предрелизного тестирования
 ├── prod/                       # Конфигурация для продакшена (фиксированные версии)
 ├── pyproject.toml              # Корневой конфиг uv workspace
