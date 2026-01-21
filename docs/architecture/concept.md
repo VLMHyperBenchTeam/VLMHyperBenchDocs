@@ -35,8 +35,9 @@ graph TD
 *   **Logic**:
     1.  Парсинг `user_config.csv` и сопоставление с реестрами.
     2.  Планирование задач (Scheduling) с поддержкой асинхронного запуска и распараллеливания по GPU.
-    3.  Подготовка томов (Volumes).
-    4.  Последовательный запуск этапов (Inference -> Eval -> Report).
+    3.  **Event-Driven Tracking**: Прием сигналов прогресса от контейнеров и трансляция в Web UI.
+    4.  Подготовка томов (Volumes).
+    5.  Последовательный запуск этапов (Inference -> Eval -> Report) с поддержкой инкрементальных прогонов.
 
 ### 2.2. Слой исполнения (Execution Plane)
 
@@ -71,6 +72,39 @@ graph TD
     ReportingStage -->|"Write final_report.md"| FS
 ```
 
+### 2.3. Жизненный цикл бенчмарка (State Machine)
+
+```mermaid
+stateDiagram-v2
+    [*] --> Planning
+    Planning --> Inference_Queue
+    
+    state Inference_Queue {
+        [*] --> Model1_Inference
+        [*] --> Model2_Inference
+        Model1_Inference --> Model1_Answers_Saved
+        Model2_Inference --> Model2_Answers_Saved
+    }
+    
+    Model1_Answers_Saved --> Model1_Eval
+    Model2_Answers_Saved --> Model2_Eval
+    
+    state Evaluation_Stage {
+        Model1_Eval --> Model1_Metrics_Done
+        Model2_Eval --> Model2_Metrics_Done
+    }
+    
+    Model1_Metrics_Done --> Report_Gen
+    Model2_Metrics_Done --> Report_Gen
+    
+    state Report_Gen {
+        [*] --> Model_Reports
+        Model_Reports --> Comparative_Report
+    }
+    
+    Comparative_Report --> [*]
+```
+
 ## 3. Ключевые принципы реализации
 
 ### 3.1. Абстракция окружений
@@ -90,8 +124,8 @@ graph TD
 1.  **Initialization**: Оркестратор парсит конфиг, подготавливает план запуска.
 2.  **Environment Setup**: `EnvManager` поднимает контейнер. Выполняется **Dynamic Dependency Injection** (установка драйверов модели и библиотек метрик).
 3.  **Data Sync**: Если требуется, данные скачиваются из S3 на локальный диск (Smart Sync).
-4.  **Inference**: Запуск модели, генерация ответов -> `answers.csv`.
-5.  **Evaluation**: Запуск легкого контейнера оценки. Расчет метрик -> `metrics.csv`.
+4.  **Inference & Live Monitoring**: Запуск модели. `APIWrapper` асинхронно сообщает о прогрессе и потреблении ресурсов. Генерация ответов -> `answers.csv`.
+5.  **Evaluation**: Запуск легкого контейнера оценки. Валидация структуры (Pydantic), расчет текстовых и ресурсных метрик -> `metrics.csv`.
 6.  **Reporting**: Агрегация результатов и генерация отчета -> `report.md`.
 
 ## 5. Технологический стек
