@@ -21,8 +21,9 @@ graph LR
     end
 
     subgraph "Inference Layer (Container)"
-        Stage1 <--> Wrap[API Wrapper]
-        Wrap <--> Back[vLLM / SGLang / HF]
+        Stage1 <--> Wrap[API Wrapper Core]
+        Wrap -- dynamic load --> ADP[Specific Adapter Package]
+        ADP <--> Engine[vLLM / SGLang / HF]
     end
 ```
 
@@ -31,22 +32,25 @@ graph LR
 ```mermaid
 sequenceDiagram
     participant Orch as Orchestrator
-    participant Cont as GPU Container
+    participant Wrap as API Wrapper (Core)
+    participant ADP as Adapter (vLLM/HF)
     participant PM as Prompt Manager
-    participant Wrap as API Wrapper (FastAPI)
-    participant Back as Backend (vLLM/HF)
 
-    Orch->>Cont: Start Container (Image + Volumes)
-    Cont->>Wrap: Initialize with model_params
-    Wrap->>Back: Load Model weights
+    Note over Orch,Wrap: Control Plane
+    Orch->>Wrap: POST /v1/model/load {engine_params, env, backend_class}
+    Wrap->>Wrap: Mask secrets & update os.environ
+    Wrap->>ADP: Dynamic Import & __init__(engine_params)
+    ADP-->>Wrap: Engine Ready
+    Wrap-->>Orch: 200 OK (Model Loaded)
     
+    Note over Orch,PM: Data Plane
     loop For each item in Dataset
-        Cont->>PM: get_prompt(item, model_id)
-        PM-->>Cont: Final Prompt (e.g. Passport specific)
-        Cont->>Wrap: async POST /v1/chat/completions
-        Wrap->>Back: Generate with specific params
-        Back-->>Wrap: Tokens
-        Wrap-->>Cont: JSON Response
+        Orch->>PM: get_prompt(item, model_id)
+        PM-->>Orch: Final Prompt
+        Orch->>Wrap: POST /v1/chat/completions {X-API-Key}
+        Wrap->>ADP: generate(request)
+        ADP-->>Wrap: Response + Usage
+        Wrap-->>Orch: Response + Performance Metrics
     end
     
     Cont->>Orch: Write answers.csv & Finish
@@ -80,17 +84,18 @@ sequenceDiagram
 
 ## 4. Слой инференса (Inference Layer)
 
-### 4.1. API Wrapper (FastAPI Proxy)
-*   Унифицирует доступ к моделям через OpenAI-совместимый протокол.
-*   Поддерживает `model_params` для передачи специфичных настроек (например, `ngram_size`, `window_size` для DeepSeek-OCR).
-*   Реализует `constrained decoding` через параметры `response_format`.
-*   **Telemetry**: Собирает метрики производительности (TTFT, TPOT) и ресурсов (Peak VRAM) для каждого запроса.
-*   **Watchdog**: Фоновый процесс для живого мониторинга ресурсов системы. См. [ADR-010](./adr/010-resource-monitoring.md).
+### 4.1. API Wrapper Core
+*   **Control Plane**: Управление жизненным циклом через `/v1/model/load` и `/v1/model/unload`.
+*   **Data Plane**: OpenAI-совместимый прокси через `/v1/chat/completions`.
+*   **Security**: Авторизация по `X-API-Key`, безопасная инъекция `env` переменных, маскировка логов.
+*   **Telemetry**: Сбор метрик Latency, TTFT, TPOT и Peak VRAM.
+*   **Watchdog**: Фоновый мониторинг системных ресурсов (CPU/RAM/GPU).
 
-### 4.2. Backend Adapters
-*   `vLLMAdapter`: Интеграция с `guided_decoding`.
-*   `SGLangAdapter`: Использование FSM для структурированного вывода.
-*   `HuggingFaceAdapter`: Использование библиотеки **Outlines** для наложения масок на логиты.
+### 4.2. Пакеты Адаптеров (Viral Modularity)
+*   Адаптеры являются независимыми Python-пакетами, устанавливаемыми JIT.
+*   `vllm-adapter`: Базовая реализация для `vllm.AsyncLLMEngine`.
+*   `deepseek-adapter`: Специализированная логика для DeepSeek-OCR (автоматическая настройка стоп-токенов).
+*   **Discovery**: Оркестратор автоматически выбирает адаптер на основе `Framework Registry` и имени модели.
 
 ## 5. Слой оценки (Evaluation Layer)
 

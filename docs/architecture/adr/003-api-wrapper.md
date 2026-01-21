@@ -4,41 +4,40 @@
 Разные бэкенды (vLLM, HuggingFace, SGLang) имеют разные программные интерфейсы. Также необходимо централизованно замерять метрики производительности (TTFT, TPOT), что сложно сделать, используя только стандартные API инференс-движков.
 
 ## Решение
-Внутри контейнера модели запускается легковесный FastAPI прокси-сервер (**API Wrapper**), который унифицирует интерфейс до стандарта OpenAI-совместимого API (`/v1/chat/completions`) и собирает телеметрию.
+Внутри контейнера модели запускается легковесный FastAPI прокси-сервер (**API Wrapper**), разделенный на **Control Plane** (управление) и **Data Plane** (инференс).
 
 ### Архитектура Wrapper'а
 
-1.  **Proxy Layer**: Принимает запрос `/v1/chat/completions`.
-2.  **Metrics Collector**:
-    *   Засекает `start_time` и `mem_start` (через `pynvml`).
-    *   Засекает `ttft` (при стриминге) и `end_time`.
-    *   Считает метрики (Latency, Peak Memory Delta).
-3.  **Backend Adapter**: Проксирует запрос в реальный движок (vLLM/SGLang) локально или по сети.
-4.  **Response Enricher**: Возвращает клиенту расширенный ответ, добавляя метрики в поле `usage` или кастомный хедер.
+1.  **Control Plane (Lifecycle Management)**:
+    *   `POST /v1/model/load`: Динамическая загрузка адаптера и инициализация движка.
+    *   `POST /v1/model/unload`: Освобождение ресурсов GPU.
+    *   **Безопасность**: Авторизация через `X-API-Key` и безопасная передача секретов (`env`) с маскировкой в логах.
 
-### Псевдокод реализации
+2.  **Data Plane (Inference)**:
+    *   `POST /v1/chat/completions`: Унифицированный OpenAI-совместимый интерфейс.
+    *   **Backend Adapters**: Модульные пакеты (`vllm-adapter`, `deepseek-adapter`), загружаемые JIT.
+
+3.  **Metrics & Telemetry**:
+    *   `TelemetryManager`: Замер Latency и VRAM Delta.
+    *   `ResourceWatchdog`: Фоновый мониторинг системных ресурсов (CPU, RAM, GPU Util).
+
+### Псевдокод реализации (lifespan & dynamic load)
 
 ```python
-@app.post("/v1/chat/completions")
-async def proxy_generate(request: Request):
-    # 1. Start Metrics
-    start_time = time.perf_counter()
-    mem_start = get_gpu_memory()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await watchdog.start()
+    yield
+    await watchdog.stop()
 
-    # 2. Forward Request
-    response = await backend.generate(request)
-    
-    # 3. End Metrics
-    end_time = time.perf_counter()
-    mem_end = get_gpu_memory()
-    
-    # 4. Enrich Response
-    result = response.json()
-    result["performance"] = {
-        "latency_ms": (end_time - start_time) * 1000,
-        "peak_memory_mb": mem_end / 1024**2
-    }
-    return result
+@app.post("/v1/model/load")
+async def load_model(request: ModelLoadRequest, x_api_key: str = Header(...)):
+    verify(x_api_key)
+    os.environ.update(request.env) # Inject secrets like HF_TOKEN
+    module = importlib.import_module(request.backend_module)
+    global backend
+    backend = module.Adapter(request.engine_params)
+    return {"status": "loaded"}
 ```
 
 ## Последствия
