@@ -106,10 +106,18 @@ sequenceDiagram
 
 ### 5.2. Metric Registry & Aggregator
 *   **Hierarchy**: `TextMetric` (CER/ANLS), `FieldMetric` (JSON match), `ClassificationMetric`, `ResourceMetric` (VRAM/Latency).
-*   **Metric Registry**: Поддерживает версионирование алгоритмов расчета (например, `ANLS_v1`, `ANLS_v2`).
+*   **Metric Registry**: Поддерживает Namespaces (Backends) и версионирование алгоритмов расчета. Структура реестра: `{name: {backend: {version: cls}}}`.
+*   **Backend Isolation**: Поддержка хранения метаданных бэкендов, включая их специфичные зависимости (pip-пакеты).
 *   **Aggregation Strategies**: `by_id` (детально), `by_category` (группировка), `general` (общий итог).
 
-### 5.3. Evaluation Flow (Independent Stage)
+### 5.3. Изоляция Бэкендов (Backend Isolation)
+Для решения проблемы конфликтующих зависимостей между разными библиотеками метрик (например, `evalscope` vs `lighteval`) используется стратегия изоляции через контейнеры:
+1.  **Группировка**: Orchestrator анализирует список метрик в задаче и группирует их по бэкендам.
+2.  **Многоэтапная Оценка**: Для каждого уникального бэкенда запускается отдельная сессия (контейнер).
+3.  **JIT Установка**: В контейнер устанавливаются только те зависимости, которые необходимы для текущего бэкенда (используя метаданные из реестра).
+4.  **Слияние результатов**: Артефакты из разных этапов оценки объединяются в финальный отчет.
+
+### 5.4. Evaluation Flow (Independent Stage)
 
 ```mermaid
 graph TD
@@ -117,8 +125,8 @@ graph TD
         ER[Evaluation Runner] --> RL[Result Loader]
         ER --> ME[Metric Evaluator]
         ME --> MR[Metric Registry]
-        MR --> M1[Metric: ANLS]
-        MR --> M2[Metric: CER]
+        MR --> M1[Metric: ANLS (native)]
+        MR --> M2[Metric: ANLS (evalscope)]
         ER --> AG[Aggregator]
     end
 

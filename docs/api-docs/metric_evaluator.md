@@ -64,17 +64,20 @@ def validate_data() -> None
 #### evaluate\_item
 
 ```python
-def evaluate_item(pred_raw: str, gt_raw: str) -> Dict[str, float]
+def evaluate_item(prediction: Any, target: Any, metrics: List[Dict[str, Any]], schema: Optional[Type[BaseModel]] = None, active_backend: Optional[str] = None) -> Dict[str, MetricResult]
 ```
 
-Выполняет полный цикл оценки одного объекта: парсинг, выравнивание полей и расчет метрик.
+Выполняет расчет метрик для одного объекта. Поддерживает фильтрацию по активному бэкенду для обеспечения изоляции зависимостей.
 
 Аргументы:
-    pred_raw (str): Сырой ответ модели.
-    gt_raw (str): Эталонный ответ.
+    prediction (Any): Ответ модели (строка или десериализованный объект).
+    target (Any): Эталонный ответ.
+    metrics (List[Dict]): Список конфигураций метрик (например, `[{"name": "anls", "backend": "evalscope"}]`).
+    schema (BaseModel, optional): Pydantic-модель для валидации структуры.
+    active_backend (str, optional): Если указан, будут вычислены только метрики этого бэкенда.
 
 Возвращает:
-    Dict[str, float]: Словарь со значениями всех метрик (включая StructuralFidelity).
+    Dict[str, MetricResult]: Словарь объектов MetricResult.
 
 Метрики:
     - StructuralFidelity (валидность формата)
