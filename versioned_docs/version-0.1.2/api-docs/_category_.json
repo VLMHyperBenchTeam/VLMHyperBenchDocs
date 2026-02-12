@@ -1,0 +1,8 @@
+{
+  "label": "API docs",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "VLMHyperBench packages API docs"
+  }
+}
